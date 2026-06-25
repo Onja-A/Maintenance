@@ -156,7 +156,6 @@ code{font-family:var(--mono);background:rgba(83,74,183,.08);color:#3C3489;paddin
   .f-full{grid-column:1}
 }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 <div id="app">
@@ -185,7 +184,7 @@ code{font-family:var(--mono);background:rgba(83,74,183,.08);color:#3C3489;paddin
     <div class="nav-item" data-page="budget">💶 Budget</div>
     <div class="nav-item" data-page="admin">⚙ Administration</div>
   </nav>
-  <div class="sidebar-ft"><span class="dot" id="dot"></span><span id="conn-txt">Mode local</span><span style="margin-left:auto;font-size:10px;color:#aaa;font-family:var(--mono)">v2.54</span></div>
+  <div class="sidebar-ft"><span class="dot" id="dot"></span><span id="conn-txt">Mode local</span><span style="margin-left:auto;font-size:10px;color:#aaa;font-family:var(--mono)">v2.55</span></div>
 </aside>
 
 <div class="main">
@@ -2245,8 +2244,7 @@ function tableToData(tableId) {
 function exportCSV(tableId, filename) {
   var data = tableToData(tableId);
   if(!data){toast('Generez d abord le tableau.','error');return;}
-  var csv = data.map(function(row){return row.join('\t');}).join('
-');
+  var csv = data.map(function(row){return row.join('\t');}).join('\n');
   var blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a'); a.href=url; a.download=filename+'.csv'; a.click();
@@ -2257,7 +2255,17 @@ function exportCSV(tableId, filename) {
 function exportXLSX(tableId, filename) {
   var data = tableToData(tableId);
   if(!data){toast('Generez d abord le tableau.','error');return;}
-  if(typeof XLSX === 'undefined'){toast('SheetJS non charge.','error');return;}
+  if(typeof XLSX === 'undefined'){
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    s.onload = function(){ doXLSX(data, filename); };
+    s.onerror = function(){ toast('SheetJS non disponible (mode local?).','error'); };
+    document.head.appendChild(s);
+    return;
+  }
+  doXLSX(data, filename);
+}
+function doXLSX(data, filename) {
   var ws = XLSX.utils.aoa_to_sheet(data);
   // Auto column widths
   var colWidths = data[0].map(function(_,ci){
