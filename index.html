@@ -184,7 +184,7 @@ code{font-family:var(--mono);background:rgba(83,74,183,.08);color:#3C3489;paddin
     <div class="nav-item" data-page="budget">💶 Budget</div>
     <div class="nav-item" data-page="admin">⚙ Administration</div>
   </nav>
-  <div class="sidebar-ft"><span class="dot" id="dot"></span><span id="conn-txt">Mode local</span><span style="margin-left:auto;font-size:10px;color:#aaa;font-family:var(--mono)">v2.55</span></div>
+  <div class="sidebar-ft"><span class="dot" id="dot"></span><span id="conn-txt">Mode local</span><span style="margin-left:auto;font-size:10px;color:#aaa;font-family:var(--mono)">v2.56</span></div>
 </aside>
 
 <div class="main">
@@ -1897,6 +1897,7 @@ function buildGantt() {
   var theadRow1 = '<tr>';
   theadRow1 += '<th class="col-info" rowspan="1">Localisation</th>';
   theadRow1 += '<th class="col-info" rowspan="1">Code Action</th>';
+  theadRow1 += '<th class="col-info" rowspan="1">Spécification</th>';
   theadRow1 += '<th class="col-info" rowspan="1">Intervention</th>';
   months.forEach(function(mo){
     theadRow1 += '<th>'+MONTH_NAMES[mo.month]+'<br><span style="font-size:9px;font-weight:400">'+mo.year+'</span></th>';
@@ -1966,6 +1967,7 @@ function buildGantt() {
     var row = '<tr>';
     row += '<td class="col-info" title="'+esc(proc.localisation||'')+'">'+esc(proc.localisation||'')+'</td>';
     row += '<td class="col-info" style="font-family:var(--mono);font-size:11px"><code>'+esc(proc.codeAction||'')+'</code></td>';
+    row += '<td class="col-info">'+esc(proc.spec||'')+'</td>';
     row += '<td class="col-info" style="max-width:220px" title="'+esc(proc.actions||'')+'">'+esc((proc.actions||'').substring(0,50))+'</td>';
 
     cells.forEach(function(cell){
@@ -2110,7 +2112,7 @@ function buildBudget() {
 
   // Build thead
   var thead = document.getElementById('budget-thead');
-  var hrow = '<tr><th>Localisation</th><th>Code Action</th><th>Machine</th><th>Intervention</th><th>Consommable</th><th>Qté</th><th>PU (Ar)</th>';
+  var hrow = '<tr><th>Localisation</th><th>Code Action</th><th>Machine</th><th>Spécification</th><th>Intervention</th><th>Consommable</th><th>Qté</th><th>PU (Ar)</th>';
   months.forEach(function(mo){
     hrow += '<th>'+MONTH_NAMES[mo.month]+' '+mo.year+'</th>';
   });
@@ -2185,6 +2187,7 @@ function buildBudget() {
     row += '<td>'+esc(proc.localisation||'')+'</td>';
     row += '<td><code>'+esc(proc.codeAction||'')+'</code></td>';
     row += '<td>'+esc(proc.machine||'')+'</td>';
+    row += '<td>'+esc(proc.spec||'')+'</td>';
     row += '<td class="cell-act">'+esc((proc.actions||'').substring(0,50))+'</td>';
     row += '<td>'+esc(proc.consommable||'')+'</td>';
     row += '<td style="text-align:right">'+qte+'</td>';
